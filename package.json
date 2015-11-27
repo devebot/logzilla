@@ -1,0 +1,29 @@
+{
+  "name": "logdapter",
+  "version": "0.0.7",
+  "description": "Node.js Logging Adapter for Devebot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devebot/logdapter.git"
+  },
+  "keywords": [
+    "Logging",
+    "Devebot",
+    "Winston"
+  ],
+  "author": "Hung Pham <pnhung177@acegik.net> (http://acegik.net/blog)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devebot/logdapter/issues"
+  },
+  "homepage": "https://github.com/devebot/logdapter#readme",
+  "dependencies": {
+    "winston": "^2.1.1",
+    "winston-logstash": "^0.2.11",
+    "winston-mongodb": "^1.2.0"
+  }
+}

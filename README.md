@@ -1,3 +1,3 @@
 # logdapter
 
-The simple winston based logging adapter.
+The simple winston based logging adapter using in devebot.
