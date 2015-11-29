@@ -6,6 +6,8 @@ var winston = require('winston');
 require('winston-mongodb');
 require('winston-logstash');
 
+var acegikLogger = require('./lib/logger.js');
+
 var acegikLevels = {
   levels: {
     debug: 4,
@@ -85,7 +87,7 @@ var Service = function(params) {
     }));
   }
 
-  var logger = new winston.Logger({
+  var logger = new acegikLogger({
     levels: acegikLevels.levels,
     colors: acegikLevels.colors,
     transports: transports,
