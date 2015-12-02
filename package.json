@@ -11,9 +11,10 @@
     "url": "git+https://github.com/devebot/logdapter.git"
   },
   "keywords": [
-    "Logging",
-    "Devebot",
-    "Winston"
+    "logging",
+    "devebot",
+    "winston",
+    "logstash"
   ],
   "author": "Hung Pham <pnhung177@acegik.net> (http://acegik.net/blog)",
   "license": "ISC",
