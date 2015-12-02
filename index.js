@@ -53,6 +53,18 @@ var Service = function(params) {
           level: transportLevel
         }));
         break;
+      case 'file':
+        transports.push(new winston.transports.File({
+          json: false,
+          timestamp: true,
+          tailable: transportDef.tailable || true,
+          zippedArchive: transportDef.zippedArchive || true,
+          filename: transportDef.filename || 'logfile.log',
+          maxsize: transportDef.maxsize || 3 * 1024 * 1024,
+          maxFiles: transportDef.maxFiles || 3,
+          level: transportLevel
+        }));
+        break;
       case 'logstash':
         transports.push(new winston.transports.Logstash({
           host: transportDef.host || '127.0.0.1',
