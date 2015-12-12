@@ -38,9 +38,13 @@ var Service = function(params) {
   var self = this;
   
   var transports = [];
+  var disabledTransports = [];
   var transportDefs = loggerConfig.transports || [];
   transportDefs.forEach(function(transportDef) {
     transports.push(new constructors[transportDef.type](transportDef));
+    if (transportDef.enabled == false) {
+      disabledTransports.push(transportDef.type);
+    }
   });
 
   if (transports.length == 0) {
@@ -59,6 +63,8 @@ var Service = function(params) {
     exceptionHandlers: transports,
     exitOnError: false
   });
+
+  logger.activate(false, disabledTransports);
 
   self.getLogger = function() {
     return logger;
