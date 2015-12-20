@@ -3,6 +3,9 @@
 var events = require('events');
 var util = require('util');
 
+var Validator = require('jsonschema').Validator;
+var validator = new Validator();
+
 var winston = require('winston');
 
 var DailyRotateFile = require('winston-daily-rotate-file');
@@ -32,6 +35,15 @@ var Service = function(params) {
   Service.super_.call(this);
   
   params = params || {};
+  
+  if (params.validated != true) {
+    var result = validator.validate(params, Service.argumentSchema);
+    if (result.errors.length > 0) {
+      var err = new Error('Constructor argument validation is failed');
+      err.name = 'ValidatingArgumentError';
+      throw err;
+    }
+  }
   
   var loggerConfig = params.logger || {};
   

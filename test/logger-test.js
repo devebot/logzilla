@@ -14,16 +14,16 @@ describe('Logger:', function() {
   var logger;
 
   describe('method isLevelEnabled()', function() {
-	  beforeEach(function (done) {
+    beforeEach(function (done) {
       var transports = [
-		    new winston.transports.Console({
+        new winston.transports.Console({
           type: "console",
           level: "trace",
-  		    json: false,
+          json: false,
           timestamp: true,
           colorize: true
-  	    }),
-  	    new winston.transports.DailyRotateFile({
+        }),
+        new winston.transports.DailyRotateFile({
           type: 'dailyRotateFile',
           level: 'error',
           json: 'false',
@@ -32,7 +32,7 @@ describe('Logger:', function() {
         })
       ];
       
-		  logger = new Logger({
+      logger = new Logger({
         levels: consts.levelDefs.levels,
         colors: consts.levelDefs.colors,
         transports: transports,
@@ -44,28 +44,28 @@ describe('Logger:', function() {
     });
     
     it('should return true if there is a transport that has level higher than', function(done) {
-		  assert.isTrue(logger.isLevelEnabled('error'));
-		  assert.isTrue(logger.isLevelEnabled('warn'));
-		  assert.isTrue(logger.isLevelEnabled('trace'));
-		  assert.isFalse(logger.isLevelEnabled('info'));
-		  assert.isFalse(logger.isLevelEnabled('debug'));
+      assert.isTrue(logger.isLevelEnabled('error'));
+      assert.isTrue(logger.isLevelEnabled('warn'));
+      assert.isTrue(logger.isLevelEnabled('trace'));
+      assert.isFalse(logger.isLevelEnabled('info'));
+      assert.isFalse(logger.isLevelEnabled('debug'));
       
       done && done();
-		});
-	});
+    });
+  });
 
   describe('method setLevel()', function() {
 
     beforeEach(function (done) {
       var transports = [
-		    new winston.transports.Console({
+        new winston.transports.Console({
           type: "console",
           level: "warn",
-  		    json: false,
+          json: false,
           timestamp: true,
           colorize: true
-  	    }),
-  	    new winston.transports.DailyRotateFile({
+        }),
+        new winston.transports.DailyRotateFile({
           type: 'dailyRotateFile',
           level: 'error',
           json: 'false',
@@ -74,7 +74,7 @@ describe('Logger:', function() {
         })
       ];
       
-		  logger = new Logger({
+      logger = new Logger({
         levels: consts.levelDefs.levels,
         colors: consts.levelDefs.colors,
         transports: transports,
@@ -85,32 +85,32 @@ describe('Logger:', function() {
       done && done();
     });
 
-	  afterEach(function(done) {
-	    done && done();
-	  });
+    afterEach(function(done) {
+      done && done();
+    });
 
-		it('should change all transports level to new level', function(done) {
-		  logger.setLevel('debug', 'console');
+    it('should change all transports level to new level', function(done) {
+      logger.setLevel('debug', 'console');
       logger.setLevel('trace', 'dailyRotateFile');
       
       assert.equal('debug', logger.transports['console'].level);
       assert.equal('trace', logger.transports['dailyRotateFile'].level);
       
       done && done();
-		});
+    });
 
     it('should keep the current transports level if the new level is invalid', function(done) {
-		  logger.setLevel('invalid', 'console');
+      logger.setLevel('invalid', 'console');
       logger.setLevel('invalid', 'dailyRotateFile');
       
       assert.equal('warn', logger.transports['console'].level);
       assert.equal('error', logger.transports['dailyRotateFile'].level);
       
       done && done();
-		});
-	});
-	
-	describe('method activate()', function() {
-	  
-	});
+    });
+  });
+  
+  describe('method activate()', function() {
+    
+  });
 });
