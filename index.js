@@ -18,8 +18,8 @@ var constructors = {
   'console': winston.transports.Console,
   'file': winston.transports.File,
   'dailyRotateFile': winston.transports.DailyRotateFile,
-  'logstash': winston.transports.Logstash,
-  'mongodb': winston.transports.MongoDB
+  'mongodb': winston.transports.MongoDB,
+  'logstash': winston.transports.Logstash
 };
 
 var logdapterLogger = require('./lib/logger.js');
@@ -46,7 +46,7 @@ var Service = function(params) {
   }
   
   var loggerConfig = params.logger || {};
-  
+
   var self = this;
   
   var transports = [];
@@ -80,6 +80,14 @@ var Service = function(params) {
 
   self.getLogger = function() {
     return logger;
+  };
+  
+  self.getServiceInfo = function() {
+    return {
+      levels: JSON.stringify(logdapterConsts.levelDefs.levels),
+      colors: JSON.stringify(logdapterConsts.levelDefs.colors),
+      disabledTransports: JSON.stringify(disabledTransports)
+    };
   };
 };
 
