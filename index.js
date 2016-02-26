@@ -49,6 +49,15 @@ var Service = function(params) {
 
   var self = this;
   
+  var defaultTransports = [
+    new winston.transports.Console({
+      json: false,
+      timestamp: true,
+      colorize: true,
+      level: defaultLogLevel
+    })
+  ];
+
   var transports = [];
   var disabledTransports = [];
   var transportDefs = loggerConfig.transports || [];
@@ -60,19 +69,14 @@ var Service = function(params) {
   });
 
   if (transports.length == 0) {
-    transports.push(new winston.transports.Console({
-      json: false,
-      timestamp: true,
-      colorize: true,
-      level: defaultLogLevel
-    }));
+    transports = defaultTransports;
   }
 
   var logger = new logdapterLogger({
     levels: logdapterConsts.levelDefs.levels,
     colors: logdapterConsts.levelDefs.colors,
     transports: transports,
-    exceptionHandlers: transports,
+    exceptionHandlers: defaultTransports,
     exitOnError: false
   });
 
@@ -83,10 +87,42 @@ var Service = function(params) {
   };
   
   self.getServiceInfo = function() {
+    var transportInfos = transports.map(function(transport) {
+      return {
+        name: transport.name,
+        level: transport.level,
+        json: transport.json,
+        silent: transport.silent,
+        handleExceptions: transport.handleExceptions,
+        timestamp: transport.timestamp,
+        colorize: transport.colorize
+      };
+    });
     return {
-      levels: JSON.stringify(logdapterConsts.levelDefs.levels),
-      colors: JSON.stringify(logdapterConsts.levelDefs.colors),
-      disabledTransports: JSON.stringify(disabledTransports)
+      levels: logdapterConsts.levelDefs.levels,
+      colors: logdapterConsts.levelDefs.colors,
+      transports: transportInfos,
+      disabledTransports: disabledTransports
+    };
+  };
+
+  self.getServiceHelp = function() {
+    var info = this.getServiceInfo();
+    return {
+      type: 'record',
+      title: 'Logdapter information',
+      label: {
+        logger_levels: 'Levels',
+        logger_colors: 'Colors',
+        transports: 'Defined transports',
+        disabled_transport_names: 'Disabled transports'
+      },
+      data: {
+        logger_levels: JSON.stringify(info.levels, null, 2),
+        logger_colors: JSON.stringify(info.colors, null, 2),
+        transports: JSON.stringify(info.transports, null, 2),
+        disabled_transport_names: info.disabledTransports
+      }
     };
   };
 };

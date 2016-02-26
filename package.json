@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/devebot/logdapter#readme",
   "dependencies": {
-    "debug": "^2.2.0",
     "jsonschema": "^1.0.2",
     "winston": "^2.1.1",
     "winston-daily-rotate-file": "^1.0.1",
@@ -35,6 +34,7 @@
     "winston-mongodb": "^1.2.0"
   },
   "devDependencies": {
+    "debug": "^2.2.0",
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2"

@@ -8,13 +8,13 @@ The simple winston based logging adapter using in devebot.
 
 Installs `logdapter` module:
 
-```bash
+``` bash
 $ npm install --save logdapter
 ```
 
 Creates a logdapter object and initializes it:
 
-```javascript
+``` javascript
 var Logdapter = require('../index.js');
 var logdapter = new Logdapter({
   logger: {
@@ -34,7 +34,7 @@ var logger = logdapter.getLogger();
 
 Uses the helper methods to log messages:
 
-```javascript
+``` javascript
 logger.error(' - this is an error: %s', err);
 logger.warn(' - alert: this record should be index again.');
 logger.trace(' - marks the startpoint of process ...');
@@ -42,9 +42,11 @@ logger.info(' - object detail: %s', JSON.stringify(doc));
 logger.debug(' - display data and process in details');
 ```
 
+### Change logger's level
+
 To change logger level at runtime, you should use the setLevel() method:
 
-```javascript
+``` javascript
 // ... code that uses old loglevel
 
 // set 'error' level to all transports
@@ -63,4 +65,26 @@ You can reset all logger transport levels to default levels:
 
 ```javascript
 logger.resetDefaultLevels();
+```
+
+### Enable/disable transports
+
+To disable the transports at runtime, use the follow method call:
+
+``` javascript
+// disable the logstash transport
+logger.activate(false, 'logstash');
+
+// or the list of transports
+logger.activate(false, ['mongodb', 'logstash']);
+```
+
+To enable the tranports at runtime, use the `true` value in `activate()` method:
+
+``` javascript
+// enable the logstash transport
+logger.activate(true, 'logstash');
+
+// or the list of transports
+logger.activate(true, ['mongodb', 'logstash']);
 ```
