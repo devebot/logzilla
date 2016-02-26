@@ -87,21 +87,10 @@ var Service = function(params) {
   };
   
   self.getServiceInfo = function() {
-    var transportInfos = transports.map(function(transport) {
-      return {
-        name: transport.name,
-        level: transport.level,
-        json: transport.json,
-        silent: transport.silent,
-        handleExceptions: transport.handleExceptions,
-        timestamp: transport.timestamp,
-        colorize: transport.colorize
-      };
-    });
     return {
       levels: logdapterConsts.levelDefs.levels,
       colors: logdapterConsts.levelDefs.colors,
-      transports: transportInfos,
+      transports: logger.getTransportInfos(),
       disabledTransports: disabledTransports
     };
   };
