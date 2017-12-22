@@ -15,7 +15,7 @@ $ npm install --save logdapter
 Creates a logdapter object and initializes it:
 
 ``` javascript
-var Logdapter = require('../index.js');
+var Logdapter = require('logdapter');
 var logdapter = new Logdapter({
   logger: {
     transports: [{
