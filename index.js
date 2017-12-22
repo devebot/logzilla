@@ -8,22 +8,18 @@ var validator = new Validator();
 
 var winston = require('winston');
 
-var DailyRotateFile = require('winston-daily-rotate-file');
-winston.transports.DailyRotateFile = DailyRotateFile;
-
-require('winston-mongodb');
+require('winston-daily-rotate-file');
 require('winston-logstash');
 
 var constructors = {
   'console': winston.transports.Console,
   'file': winston.transports.File,
   'dailyRotateFile': winston.transports.DailyRotateFile,
-  'mongodb': winston.transports.MongoDB,
   'logstash': winston.transports.Logstash
 };
 
-var logdapterLogger = require('./lib/logger.js');
-var logdapterConsts = require('./lib/constx.js');
+var Logger = require('./lib/logger.js');
+var Consts = require('./lib/constx.js');
 
 var defaultLogLevel = 'error';
 var NODE_ENV = process.env.NODE_ENV;
@@ -32,7 +28,7 @@ if (NODE_ENV && NODE_ENV != 'production') {
 }
 
 var Service = function(params) {
-  Service.super_.call(this);
+  events.EventEmitter.call(this);
   
   params = params || {};
   
@@ -72,9 +68,9 @@ var Service = function(params) {
     transports = defaultTransports;
   }
 
-  var logger = new logdapterLogger({
-    levels: logdapterConsts.levelDefs.levels,
-    colors: logdapterConsts.levelDefs.colors,
+  var logger = new Logger({
+    levels: Consts.levelDefs.levels,
+    colors: Consts.levelDefs.colors,
     transports: transports,
     exceptionHandlers: defaultTransports,
     exitOnError: false
@@ -88,8 +84,8 @@ var Service = function(params) {
   
   self.getServiceInfo = function() {
     return {
-      levels: logdapterConsts.levelDefs.levels,
-      colors: logdapterConsts.levelDefs.colors,
+      levels: Consts.levelDefs.levels,
+      colors: Consts.levelDefs.colors,
       transports: logger.getTransportInfos(),
       disabledTransports: disabledTransports
     };
@@ -118,7 +114,7 @@ var Service = function(params) {
 
 util.inherits(Service, events.EventEmitter);
 
-Service.argumentSchema = logdapterConsts.argumentSchema;
+Service.argumentSchema = Consts.argumentSchema;
 
 module.exports = Service;
 

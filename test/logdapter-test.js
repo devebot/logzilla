@@ -5,10 +5,10 @@ var expect = require('chai').expect;
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 
-var Logdapter = require('../index.js');
-var logdapter;
+var LoggerFactory = require('../index.js');
+var factory;
 
-describe('Logdapter:', function() {
+describe('LoggerFactory:', function() {
 
   describe('Constructor argument schema', function() {
 
@@ -22,7 +22,7 @@ describe('Logdapter:', function() {
 
     it('should be passed if arguments is valid with argumentSchema', function(done) {
       expect(function() {
-        logdapter = new Logdapter({
+        factory = new LoggerFactory({
           logger: {
             transports: [{
               type: "console",
@@ -35,11 +35,6 @@ describe('Logdapter:', function() {
               host: "127.0.0.1",
               port: 28777,
               level: "debug"
-            },{
-              type: "mongodb",
-              db: "mongodb://127.0.0.1:27017/logs",
-              storeHost: true,
-              level: "debug"
             }]
           }
         });  
@@ -49,7 +44,7 @@ describe('Logdapter:', function() {
 
     it('should be failed if transport type is not found', function(done) {
       expect(function() {
-        logdapter = new Logdapter({
+        factory = new LoggerFactory({
           logger: {
             transports: [{
               type: "console2",

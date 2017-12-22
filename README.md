@@ -1,22 +1,22 @@
-# logdapter
+# logzilla
 
-[![NPM](https://nodei.co/npm/logdapter.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/logdapter/)
+[![NPM](https://nodei.co/npm/logzilla.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/logzilla/)
 
 The simple winston based logging adapter using in devebot.
 
 ## Usage
 
-Installs `logdapter` module:
+Installs `logzilla` module:
 
 ``` bash
-$ npm install --save logdapter
+$ npm install --save logzilla
 ```
 
-Creates a logdapter object and initializes it:
+Creates a logzilla object and initializes it:
 
 ``` javascript
-var Logdapter = require('logdapter');
-var logdapter = new Logdapter({
+var LoggerFactory = require('logzilla');
+var factory = new LoggerFactory({
   logger: {
     transports: [{
       type: 'console',
@@ -29,7 +29,7 @@ var logdapter = new Logdapter({
     }]
   }
 });
-var logger = logdapter.getLogger();
+var logger = factory.getLogger();
 ```
 
 Uses the helper methods to log messages:
@@ -55,8 +55,8 @@ logger.setLevel('error');
 // set 'trace' level to only 'console' transport
 logger.setLevel('trace', 'console'); 
 
-// set 'debug' level to both 'console' and 'mongodb' transports
-logger.setLevel('debug', ['console', 'mongodb']);
+// set 'debug' level to both 'console' and 'logstash' transports
+logger.setLevel('debug', ['console', 'logstash']);
 
 // ... code that uses new loglevel
 ```
@@ -76,7 +76,7 @@ To disable the transports at runtime, use the follow method call:
 logger.activate(false, 'logstash');
 
 // or the list of transports
-logger.activate(false, ['mongodb', 'logstash']);
+logger.activate(false, ['dailyRotateFile', 'logstash']);
 ```
 
 To enable the tranports at runtime, use the `true` value in `activate()` method:
@@ -86,5 +86,5 @@ To enable the tranports at runtime, use the `true` value in `activate()` method:
 logger.activate(true, 'logstash');
 
 // or the list of transports
-logger.activate(true, ['mongodb', 'logstash']);
+logger.activate(true, ['dailyRotateFile', 'logstash']);
 ```

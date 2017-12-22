@@ -1,6 +1,6 @@
 {
-  "name": "logdapter",
-  "version": "0.0.15",
+  "name": "logzilla",
+  "version": "0.1.15",
   "description": "Node.js Logging Adapter for Devebot",
   "main": "index.js",
   "scripts": {
@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devebot/logdapter.git"
+    "url": "git+https://github.com/devebot/logzilla.git"
   },
   "keywords": [
-    "logging",
     "devebot",
+    "logging",
     "winston",
     "logstash"
   ],
@@ -23,16 +23,16 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/devebot/logdapter/issues"
+    "url": "https://github.com/devebot/logzilla/issues"
   },
-  "homepage": "https://github.com/devebot/logdapter#readme",
+  "homepage": "https://github.com/devebot/logzilla#readme",
   "dependencies": {
-    "debug": "^2.2.0",
-    "jsonschema": "^1.1.0",
-    "winston": "^2.1.1",
-    "winston-daily-rotate-file": "^1.0.1",
-    "winston-logstash": "^0.2.11",
-    "winston-mongodb": "^1.2.0"
+    "debug": "^3.1.0",
+    "jsonschema": "^1.2.2",
+    "winston": "^2.4.0",
+    "winston-daily-rotate-file": "^1.7.2",
+    "winston-logstash": "^0.4.0",
+    "winston-mongodb": "^3.0.2"
   },
   "devDependencies": {
     "chai": "^3.4.1",
