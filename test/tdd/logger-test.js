@@ -125,13 +125,13 @@ describe('Logger:', function() {
       unhook_intercept();
       assert.equal(consoleOutput.length, 3);
 
-      var streamOutput = logStream.getContentsAsString() || '';
-      var streamLines = streamOutput.split('\n').filter(function(line) {
+      var rotateOutput = logStream.getContentsAsString() || '';
+      var rotateLines = rotateOutput.split('\n').filter(function(line) {
         return (typeof line === 'string') && line.trim().length > 0;
       });
 
-      false && console.log(streamLines);
-      assert.equal(streamLines.length, 4);
+      false && console.log(rotateLines);
+      assert.equal(rotateLines.length, 4);
 
       done && done();
     });
@@ -148,7 +148,146 @@ describe('Logger:', function() {
   });
   
   describe('method activate()', function() {
-    
+    var normalFileStream, rotateFileStream, consoleInterceptor, consoleOutput;
+
+    beforeEach(function (done) {
+      normalFileStream = new streamBuffers.WritableStreamBuffer();
+      rotateFileStream = new streamBuffers.WritableStreamBuffer();
+      consoleOutput = [];
+
+      var transports = [
+        new winston.transports.Console({
+          type: "console",
+          level: "trace",
+          json: false,
+          timestamp: true,
+          colorize: false
+        }),
+        new winston.transports.DailyRotateFile({
+          name: 'myRotateFile',
+          type: 'dailyRotateFile',
+          level: 'warn',
+          json: false,
+          stream: rotateFileStream
+        }),
+        new winston.transports.File({
+          type: 'file',
+          level: 'error',
+          json: false,
+          stream: normalFileStream
+        })
+      ];
+
+      logger = new Logger({
+        levels: consts.levelDefs.levels,
+        colors: consts.levelDefs.colors,
+        transports: transports,
+        exceptionHandlers: transports,
+        exitOnError: false
+      });
+
+      done && done();
+    });
+
+    it('enable/disable registered logging transports', function(done) {
+      // log with original settings
+      var logtexts = {
+        'error': 'I have an error',
+        'warn': 'dangerous!',
+        'trace': 'Hello logzilla',
+        'info': 'Today is Friday',
+        'debug': 'This is a bug'
+      };
+
+      consoleInterceptor = intercept(function(txt) {
+          consoleOutput.push(txt.trim());
+      });
+
+      Object.keys(logtexts).forEach(function(level) {
+        logger[level](logtexts[level]);
+      });
+
+      consoleInterceptor();
+
+      var rotateOutput = rotateFileStream.getContentsAsString() || '';
+      var rotateLines = rotateOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(rotateLines);
+
+      var normalOutput = normalFileStream.getContentsAsString() || '';
+      var normalLines = normalOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(normalLines);
+
+      assert.equal(rotateLines.length, 2);
+      assert.equal(normalLines.length, 1);
+      assert.equal(consoleOutput.length, 3);
+      consoleOutput.length = 0;
+
+      // deactivate some transports
+      logger.activate(false, ['myRotateFile', 'file']);
+
+      consoleInterceptor = intercept(function(txt) {
+          consoleOutput.push(txt.trim());
+      });
+
+      Object.keys(logtexts).forEach(function(level) {
+        logger[level](logtexts[level]);
+      });
+
+      consoleInterceptor();
+
+      rotateOutput = rotateFileStream.getContentsAsString() || '';
+      rotateLines = rotateOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(rotateLines);
+
+      normalOutput = normalFileStream.getContentsAsString() || '';
+      normalLines = normalOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(normalLines);
+
+      assert.equal(rotateLines.length, 0);
+      assert.equal(normalLines.length, 0);
+      assert.equal(consoleOutput.length, 3);
+      consoleOutput.length = 0;
+
+      // reactivate a disabled transport
+      logger.activate(true, ['file']);
+
+      consoleInterceptor = intercept(function(txt) {
+          consoleOutput.push(txt.trim());
+      });
+
+      Object.keys(logtexts).forEach(function(level) {
+        logger[level](logtexts[level]);
+      });
+
+      consoleInterceptor();
+
+      rotateOutput = rotateFileStream.getContentsAsString() || '';
+      rotateLines = rotateOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(rotateLines);
+
+      normalOutput = normalFileStream.getContentsAsString() || '';
+      normalLines = normalOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(normalLines);
+
+      assert.equal(rotateLines.length, 0);
+      assert.equal(normalLines.length, 1);
+      assert.equal(consoleOutput.length, 3);
+      consoleOutput.length = 0;
+
+      done && done();
+    });
   });
 
   describe('transport DailyRotateFile', function() {
@@ -178,7 +317,7 @@ describe('Logger:', function() {
       });
     });
 
-    it('should change all transports level to new level', function(done) {
+    it('logger write log messages to rotate file', function(done) {
       assert.isTrue(logger.isLevelEnabled('error'));
       assert.isTrue(logger.isLevelEnabled('warn'));
       assert.isTrue(logger.isLevelEnabled('trace'));
@@ -206,13 +345,13 @@ describe('Logger:', function() {
       });
 
       setTimeout(function() {
-        var streamOutput = fs.readFileSync(path.join(logDir.name, logFilename)).toString() || '';
-        var streamLines = streamOutput.split('\n').filter(function(line) {
+        var rotateOutput = fs.readFileSync(path.join(logDir.name, logFilename)).toString() || '';
+        var rotateLines = rotateOutput.split('\n').filter(function(line) {
           return (typeof line === 'string') && line.trim().length > 0;
         });
 
-        false && console.log(streamLines);
-        assert.equal(streamLines.length, 4);
+        false && console.log(rotateLines);
+        assert.equal(rotateLines.length, 4);
 
         done && done();
       }, 100);
