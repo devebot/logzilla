@@ -1,6 +1,6 @@
 {
   "name": "logzilla",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Node.js Logging Adapter for Devebot",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,9 @@
     "logstash"
   ],
   "author": {
-    "name": "Hung Pham",
-    "email": "pnhung177@acegik.net",
-    "url": "http://acegik.net/blog"
+    "name": "Devebot",
+    "email": "contact@devebot.com",
+    "url": "https://github.com/devebot"
   },
   "license": "ISC",
   "bugs": {
@@ -31,12 +31,11 @@
     "jsonschema": "^1.2.2",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2",
-    "winston-logstash": "^0.4.0",
-    "winston-mongodb": "^3.0.2"
+    "winston-logstash": "^0.4.0"
   },
   "devDependencies": {
-    "chai": "^3.4.1",
-    "mocha": "^2.3.4",
-    "sinon": "^1.17.2"
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "sinon": "^1.17.3"
   }
 }

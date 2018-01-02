@@ -1,3 +1,5 @@
+'use strict';
+
 var util = require('util');
 var assert = require('chai').assert;
 var expect = require('chai').expect;

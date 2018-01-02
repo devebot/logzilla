@@ -1,10 +1,11 @@
+'use strict';
+
 var util = require('util');
 var assert = require('chai').assert;
 
 var winston = require('winston');
-
-var DailyRotateFile = require('winston-daily-rotate-file');
-winston.transports.DailyRotateFile = DailyRotateFile;
+require('winston-daily-rotate-file');
+require('winston-logstash');
 
 var Logger = require('../lib/logger.js');
 var consts = require('../lib/constx.js');
