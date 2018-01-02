@@ -7,7 +7,7 @@ var expect = require('chai').expect;
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 
-var LoggerFactory = require('../index.js');
+var LoggerFactory = require('../../index.js');
 var factory;
 
 describe('LoggerFactory:', function() {
