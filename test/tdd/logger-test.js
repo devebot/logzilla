@@ -13,7 +13,7 @@ require('winston-daily-rotate-file');
 require('winston-logstash');
 
 var Logger = require('../../lib/logger.js');
-var consts = require('../../lib/constx.js');
+var Consts = require('../../lib/constx.js');
 
 describe('Logger:', function() {
 
@@ -32,8 +32,8 @@ describe('Logger:', function() {
       ];
       
       logger = new Logger({
-        levels: consts.levelDefs.levels,
-        colors: consts.levelDefs.colors,
+        levels: Consts.levelDefs.levels,
+        colors: Consts.levelDefs.colors,
         transports: transports,
         exceptionHandlers: transports,
         exitOnError: false
@@ -77,8 +77,8 @@ describe('Logger:', function() {
       ];
       
       logger = new Logger({
-        levels: consts.levelDefs.levels,
-        colors: consts.levelDefs.colors,
+        levels: Consts.levelDefs.levels,
+        colors: Consts.levelDefs.colors,
         transports: transports,
         exceptionHandlers: transports,
         exitOnError: false
@@ -179,8 +179,8 @@ describe('Logger:', function() {
       ];
 
       logger = new Logger({
-        levels: consts.levelDefs.levels,
-        colors: consts.levelDefs.colors,
+        levels: Consts.levelDefs.levels,
+        colors: Consts.levelDefs.colors,
         transports: transports,
         exceptionHandlers: transports,
         exitOnError: false
@@ -309,8 +309,8 @@ describe('Logger:', function() {
       ];
 
       logger = new Logger({
-        levels: consts.levelDefs.levels,
-        colors: consts.levelDefs.colors,
+        levels: Consts.levelDefs.levels,
+        colors: Consts.levelDefs.colors,
         transports: transports,
         exceptionHandlers: transports,
         exitOnError: false
