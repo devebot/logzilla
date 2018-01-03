@@ -22,8 +22,15 @@ var factory = new LoggerFactory({
       type: 'console',
       level: 'trace'
     }, {
+      type: 'dailyRotateFile',
+      level: 'trace',
+      json: false,
+      datePattern: '.yyyy-MM-dd',
+      filename: 'dailyfile.log'
+    }, {
       type: 'logstash',
       level: 'trace',
+      silent: true,
       host: '127.0.0.1',
       port: 28777
     }]
@@ -73,18 +80,20 @@ To disable the transports at runtime, use the follow method call:
 
 ``` javascript
 // disable the logstash transport
-logger.activate(false, 'logstash');
+logger.deactivate('logstash');
+//logger.activate('logstash', false);
 
 // or the list of transports
-logger.activate(false, ['dailyRotateFile', 'logstash']);
+logger.deactivate(['dailyRotateFile', 'logstash']);
+//logger.activate(['dailyRotateFile', 'logstash'], false);
 ```
 
 To enable the tranports at runtime, use the `true` value in `activate()` method:
 
 ``` javascript
 // enable the logstash transport
-logger.activate(true, 'logstash');
+logger.activate('logstash');
 
 // or the list of transports
-logger.activate(true, ['dailyRotateFile', 'logstash']);
+logger.activate(['dailyRotateFile', 'logstash']);
 ```

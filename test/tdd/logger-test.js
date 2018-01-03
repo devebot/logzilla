@@ -340,7 +340,7 @@ describe('Logger:', function() {
       consoleOutput.length = 0;
 
       // deactivate some transports
-      logger.activate(false, ['myRotateFile', 'file']);
+      logger.activate(['myRotateFile', 'file'], false);
 
       consoleInterceptor = intercept(function(txt) {
           consoleOutput.push(txt.trim());
@@ -370,7 +370,7 @@ describe('Logger:', function() {
       consoleOutput.length = 0;
 
       // reactivate a disabled transport
-      logger.activate(true, ['file']);
+      logger.activate('file', true);
 
       consoleInterceptor = intercept(function(txt) {
           consoleOutput.push(txt.trim());
