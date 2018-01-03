@@ -171,6 +171,102 @@ describe('Logger:', function() {
     });
   });
   
+  describe('method resetDefaultLevels()', function() {
+    var logStream, consoleOutput;
+
+    beforeEach(function (done) {
+      logStream = new streamBuffers.WritableStreamBuffer();
+      consoleOutput = [];
+
+      var transports = [
+        new winston.transports.Console({
+          type: "console",
+          level: "warn",
+          json: false,
+          timestamp: true,
+          colorize: false
+        }),
+        new winston.transports.DailyRotateFile({
+          type: 'dailyRotateFile',
+          level: 'trace',
+          json: false,
+          stream: logStream
+        })
+      ];
+
+      logger = new Logger({
+        levels: Consts.levelDefs.levels,
+        colors: Consts.levelDefs.colors,
+        transports: transports,
+        exceptionHandlers: transports,
+        exitOnError: false
+      });
+
+      done && done();
+    });
+
+    it('should change all transports level to new level', function(done) {
+      assert.isTrue(logger.isLevelEnabled('error'));
+      assert.isTrue(logger.isLevelEnabled('warn'));
+      assert.isTrue(logger.isLevelEnabled('trace'));
+      assert.isFalse(logger.isLevelEnabled('info'));
+      assert.isFalse(logger.isLevelEnabled('debug'));
+
+      logger.setLevel('trace', 'console');
+      logger.setLevel('info', 'dailyRotateFile');
+
+      assert.equal('trace', logger.getTransportInfo('console').level);
+      assert.equal('info', logger.getTransportInfo('dailyRotateFile').level);
+
+      assert.isTrue(logger.isLevelEnabled('error'));
+      assert.isTrue(logger.isLevelEnabled('warn'));
+      assert.isTrue(logger.isLevelEnabled('trace'));
+      assert.isTrue(logger.isLevelEnabled('info'));
+      assert.isFalse(logger.isLevelEnabled('debug'));
+
+      var consoleInterceptor = intercept(function(txt) {
+          consoleOutput.push(txt.trim());
+      });
+
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
+      });
+
+      consoleInterceptor();
+
+      var rotateOutput = logStream.getContentsAsString() || '';
+      var rotateLines = rotateOutput.split('\n').filter(function(line) {
+        return (typeof line === 'string') && line.trim().length > 0;
+      });
+      false && console.log(rotateLines);
+
+      validateLogOutput(rotateLines, 4);
+      validateLogOutput(consoleOutput, 3);
+      consoleOutput.length = 0;
+
+      // Reset to default levels
+      logger.resetDefaultLevels();
+
+      assert.isTrue(logger.isLevelEnabled('error'));
+      assert.isTrue(logger.isLevelEnabled('warn'));
+      assert.isTrue(logger.isLevelEnabled('trace'));
+      assert.isFalse(logger.isLevelEnabled('info'));
+      assert.isFalse(logger.isLevelEnabled('debug'));
+
+      done && done();
+    });
+
+    it('should keep the current transports level if the new level is invalid', function(done) {
+      logger.setLevel('invalid', 'console');
+      logger.setLevel('invalid', 'dailyRotateFile');
+
+      assert.equal('warn', logger.getTransportInfo('console').level);
+      assert.equal('trace', logger.getTransportInfo('dailyRotateFile').level);
+
+      done && done();
+    });
+  });
+
   describe('method activate()', function() {
     var normalFileStream, rotateFileStream, consoleInterceptor, consoleOutput;
 
