@@ -13,15 +13,38 @@ require('winston-daily-rotate-file');
 require('winston-logstash');
 
 var Logger = require('../../lib/logger.js');
-var Consts = require('../../lib/constx.js');
+var Consts = require('../../lib/consts.js');
 
 var LOG_MSGS = {
   'error': 'I have an error',
-  'warn': 'dangerous!',
+  'warn': 'Dangerous!',
   'trace': 'Hello logzilla',
   'info': 'Today is Friday',
   'debug': 'This is a bug'
 };
+
+var LOG_KEYS = Object.keys(LOG_MSGS);
+
+var MSG_PATTERN =
+    "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d" +
+    "\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)" +
+    " - (" + Object.keys(LOG_MSGS).join('|') + "): (.*)$";
+
+var MSG_REGEXP = new RegExp(MSG_PATTERN);
+
+var verifyLogMsg = function(msg, txt) {
+  var result = msg.match(MSG_REGEXP);
+  if (result == null) return false;
+  if (result.length < 4) return false;
+  return (result[result.length - 1] == txt);
+}
+
+var validateLogOutput = function(msgs, total) {
+  assert.equal(msgs.length, total);
+  for(var i=0; i<total; i++) {
+    assert.isTrue(verifyLogMsg(msgs[i], LOG_MSGS[LOG_KEYS[i]]));
+  }
+}
 
 describe('Logger:', function() {
 
@@ -114,7 +137,7 @@ describe('Logger:', function() {
       assert.isTrue(logger.isLevelEnabled('info'));
       assert.isFalse(logger.isLevelEnabled('debug'));
 
-      var unhook_intercept = intercept(function(txt) {
+      var consoleInterceptor = intercept(function(txt) {
           consoleOutput.push(txt.trim());
       });
 
@@ -122,16 +145,17 @@ describe('Logger:', function() {
         logger[level](LOG_MSGS[level]);
       });
 
-      unhook_intercept();
-      assert.equal(consoleOutput.length, 3);
+      consoleInterceptor();
 
       var rotateOutput = logStream.getContentsAsString() || '';
       var rotateLines = rotateOutput.split('\n').filter(function(line) {
         return (typeof line === 'string') && line.trim().length > 0;
       });
-
       false && console.log(rotateLines);
-      assert.equal(rotateLines.length, 4);
+
+      validateLogOutput(rotateLines, 4);
+      validateLogOutput(consoleOutput, 3);
+      consoleOutput.length = 0;
 
       done && done();
     });
@@ -214,9 +238,9 @@ describe('Logger:', function() {
       });
       false && console.log(normalLines);
 
-      assert.equal(rotateLines.length, 2);
-      assert.equal(normalLines.length, 1);
-      assert.equal(consoleOutput.length, 3);
+      validateLogOutput(rotateLines, 2);
+      validateLogOutput(normalLines, 1);
+      validateLogOutput(consoleOutput, 3);
       consoleOutput.length = 0;
 
       // deactivate some transports
@@ -244,9 +268,9 @@ describe('Logger:', function() {
       });
       false && console.log(normalLines);
 
-      assert.equal(rotateLines.length, 0);
-      assert.equal(normalLines.length, 0);
-      assert.equal(consoleOutput.length, 3);
+      validateLogOutput(rotateLines, 0);
+      validateLogOutput(normalLines, 0);
+      validateLogOutput(consoleOutput, 3);
       consoleOutput.length = 0;
 
       // reactivate a disabled transport
@@ -274,9 +298,9 @@ describe('Logger:', function() {
       });
       false && console.log(normalLines);
 
-      assert.equal(rotateLines.length, 0);
-      assert.equal(normalLines.length, 1);
-      assert.equal(consoleOutput.length, 3);
+      validateLogOutput(rotateLines, 0);
+      validateLogOutput(normalLines, 1);
+      validateLogOutput(consoleOutput, 3);
       consoleOutput.length = 0;
 
       done && done();
@@ -334,9 +358,9 @@ describe('Logger:', function() {
         var rotateLines = rotateOutput.split('\n').filter(function(line) {
           return (typeof line === 'string') && line.trim().length > 0;
         });
-
         false && console.log(rotateLines);
-        assert.equal(rotateLines.length, 4);
+
+        validateLogOutput(rotateLines, 4);
 
         done && done();
       }, 100);
