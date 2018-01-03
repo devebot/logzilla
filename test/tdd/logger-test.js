@@ -15,6 +15,14 @@ require('winston-logstash');
 var Logger = require('../../lib/logger.js');
 var Consts = require('../../lib/constx.js');
 
+var LOG_MSGS = {
+  'error': 'I have an error',
+  'warn': 'dangerous!',
+  'trace': 'Hello logzilla',
+  'info': 'Today is Friday',
+  'debug': 'This is a bug'
+};
+
 describe('Logger:', function() {
 
   var logger;
@@ -75,7 +83,7 @@ describe('Logger:', function() {
           stream: logStream
         })
       ];
-      
+
       logger = new Logger({
         levels: Consts.levelDefs.levels,
         colors: Consts.levelDefs.colors,
@@ -83,7 +91,7 @@ describe('Logger:', function() {
         exceptionHandlers: transports,
         exitOnError: false
       });
-      
+
       done && done();
     });
 
@@ -97,8 +105,8 @@ describe('Logger:', function() {
       logger.setLevel('trace', 'console');
       logger.setLevel('info', 'dailyRotateFile');
 
-      assert.equal('trace', logger.transports['console'].level);
-      assert.equal('info', logger.transports['dailyRotateFile'].level);
+      assert.equal('trace', logger.getTransportInfo('console').level);
+      assert.equal('info', logger.getTransportInfo('dailyRotateFile').level);
 
       assert.isTrue(logger.isLevelEnabled('error'));
       assert.isTrue(logger.isLevelEnabled('warn'));
@@ -110,16 +118,8 @@ describe('Logger:', function() {
           consoleOutput.push(txt.trim());
       });
 
-      var logtexts = {
-        'error': 'I have an error',
-        'warn': 'dangerous!',
-        'trace': 'Hello logzilla',
-        'info': 'Today is Friday',
-        'debug': 'This is a bug'
-      };
-
-      Object.keys(logtexts).forEach(function(level) {
-        logger[level](logtexts[level]);
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
       });
 
       unhook_intercept();
@@ -139,10 +139,10 @@ describe('Logger:', function() {
     it('should keep the current transports level if the new level is invalid', function(done) {
       logger.setLevel('invalid', 'console');
       logger.setLevel('invalid', 'dailyRotateFile');
-      
-      assert.equal('warn', logger.transports['console'].level);
-      assert.equal('trace', logger.transports['dailyRotateFile'].level);
-      
+
+      assert.equal('warn', logger.getTransportInfo('console').level);
+      assert.equal('trace', logger.getTransportInfo('dailyRotateFile').level);
+
       done && done();
     });
   });
@@ -190,21 +190,14 @@ describe('Logger:', function() {
     });
 
     it('enable/disable registered logging transports', function(done) {
-      // log with original settings
-      var logtexts = {
-        'error': 'I have an error',
-        'warn': 'dangerous!',
-        'trace': 'Hello logzilla',
-        'info': 'Today is Friday',
-        'debug': 'This is a bug'
-      };
 
+      // log with original settings
       consoleInterceptor = intercept(function(txt) {
           consoleOutput.push(txt.trim());
       });
 
-      Object.keys(logtexts).forEach(function(level) {
-        logger[level](logtexts[level]);
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
       });
 
       consoleInterceptor();
@@ -233,8 +226,8 @@ describe('Logger:', function() {
           consoleOutput.push(txt.trim());
       });
 
-      Object.keys(logtexts).forEach(function(level) {
-        logger[level](logtexts[level]);
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
       });
 
       consoleInterceptor();
@@ -263,8 +256,8 @@ describe('Logger:', function() {
           consoleOutput.push(txt.trim());
       });
 
-      Object.keys(logtexts).forEach(function(level) {
-        logger[level](logtexts[level]);
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
       });
 
       consoleInterceptor();
@@ -332,16 +325,8 @@ describe('Logger:', function() {
       assert.isTrue(logger.isLevelEnabled('info'));
       assert.isFalse(logger.isLevelEnabled('debug'));
 
-      var logtexts = {
-        'error': 'I have an error',
-        'warn': 'dangerous!',
-        'trace': 'Hello logzilla',
-        'info': 'Today is Friday',
-        'debug': 'This is a bug'
-      };
-
-      Object.keys(logtexts).forEach(function(level) {
-        logger[level](logtexts[level]);
+      Object.keys(LOG_MSGS).forEach(function(level) {
+        logger[level](LOG_MSGS[level]);
       });
 
       setTimeout(function() {
