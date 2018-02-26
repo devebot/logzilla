@@ -21,7 +21,7 @@
     "email": "contact@devebot.com",
     "url": "https://github.com/devebot"
   },
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/devebot/logzilla/issues"
   },
