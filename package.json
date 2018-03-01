@@ -1,10 +1,21 @@
 {
   "name": "logzilla",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Node.js Logging Adapter for Devebot",
   "main": "index.js",
+  "directories": {
+    "lib": "lib/"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "lib/"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src -d lib",
+    "prepublish": "npm run build",
+    "pretest": "npm run build",
+    "test": "mocha --recursive test/**/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +44,9 @@
     "winston-logstash": "^0.4.0"
   },
   "devDependencies": {
-    "debug": "^3.1.0"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "debug": "^3.1.0",
+    "mocha": "^4.1.0"
   }
 }
