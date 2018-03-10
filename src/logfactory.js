@@ -3,7 +3,7 @@
 var events = require('events');
 var util = require('util');
 
-var Validator = require('jsonschema').Validator;
+var Validator = require('./validator');
 var validator = new Validator();
 
 var winston = require('winston');
@@ -40,7 +40,7 @@ var Service = function(params) {
   
   if (params.validated != true) {
     var result = validator.validate(params, Service.argumentSchema);
-    if (result.errors.length > 0) {
+    if (!result.ok) {
       var err = new Error('Constructor argument validation is failed');
       err.name = 'ValidatingArgumentError';
       throw err;

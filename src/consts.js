@@ -27,7 +27,7 @@ if (process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
 var logzillaSchema = {
   "type": "object",
   "properties": {
-    "logger": { 
+    "logger": {
       "type": "object",
       "properties": {
         "transports": {
@@ -42,9 +42,7 @@ var logzillaSchema = {
                     "enum": ["console"]
                   },
                   "level": {
-                    "type": "string",
-                    "enum": level_enum,
-                    "default": "trace"
+                    "type": "string"
                   },
                   "enabled": {
                     "type": "boolean"
@@ -72,9 +70,7 @@ var logzillaSchema = {
                     "enum": ["http"]
                   },
                   "level": {
-                    "type": "string",
-                    "enum": level_enum,
-                    "default": "info"
+                    "type": "string"
                   },
                   "enabled": {
                     "type": "boolean"
@@ -102,9 +98,7 @@ var logzillaSchema = {
                     "enum": ["file"]
                   },
                   "level": {
-                    "type": "string",
-                    "enum": level_enum,
-                    "default": "error"
+                    "type": "string"
                   },
                   "enabled": {
                     "type": "boolean"
@@ -129,9 +123,7 @@ var logzillaSchema = {
                     "enum": ["dailyRotateFile"]
                   },
                   "level": {
-                    "type": "string",
-                    "enum": level_enum,
-                    "default": "trace"
+                    "type": "string"
                   },
                   "enabled": {
                     "type": "boolean"
@@ -165,8 +157,7 @@ var logzillaSchema = {
                     "enum": ["logstash"]
                   },
                   "level" : {
-                    "type": "string",
-                    "enum": level_enum
+                    "type": "string"
                   },
                   "enabled": {
                     "type": "boolean"
