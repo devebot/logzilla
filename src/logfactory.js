@@ -69,13 +69,16 @@ var Service = function(params) {
   }
 
   // create logger object
-  var logger = new Logger({
+  var loggerOpts = {
     levels: __levels,
     colors: __colors,
     transports: __transports,
-    exceptionHandlers: defaultTransports,
     exitOnError: false
-  });
+  };
+  if (loggerConfig.exceptionCaught) {
+    loggerOpts.exceptionHandlers = defaultTransports;
+  }
+  var logger = new Logger(loggerOpts);
 
   logger.activate(false, disabledTransports);
 
